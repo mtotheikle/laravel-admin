@@ -9,6 +9,7 @@ use Encore\Admin\Form\Field;
 use Encore\Admin\Form\Field\File;
 use Encore\Admin\Form\Tab;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -613,7 +614,10 @@ class Form
 
             $relation = $this->model->$name();
 
-            $hasDot = $relation instanceof \Illuminate\Database\Eloquent\Relations\HasOne;
+            $hasDot =
+                $relation instanceof \Illuminate\Database\Eloquent\Relations\HasOne
+                || $relation instanceof BelongsTo
+            ;
 
             $prepared = $this->prepareUpdate([$name => $values], $hasDot);
 
@@ -629,6 +633,7 @@ class Form
                     }
                     break;
                 case \Illuminate\Database\Eloquent\Relations\HasOne::class:
+                case \Illuminate\Database\Eloquent\Relations\BelongsTo::class:
 
                     $related = $this->model->$name;
 
